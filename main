@@ -1,0 +1,25 @@
+import os
+from pytube import YouTube
+import speech_recognition as sr
+
+# URL des YouTube-Videos
+url = "https://www.youtube.com/live/CsxybEcuhnc?feature=share&t=25238"
+
+# YouTube-Video herunterladen
+yt = YouTube(url)
+stream = yt.streams.first()
+stream.download(filename='video')
+
+# Audio aus dem Video extrahieren
+os.system("ffmpeg -i video.mp4 audio.wav")
+
+# Spracherkennung verwenden, um das Audio zu transkribieren
+r = sr.Recognizer()
+audio_file = sr.AudioFile('audio.wav')
+
+with audio_file as source:
+    audio = r.record(source)
+    text = r.recognize_google(audio, language='de-DE')
+
+print(text)
+
